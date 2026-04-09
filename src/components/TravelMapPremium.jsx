@@ -10,22 +10,22 @@ function hashCode(value) {
 }
 
 function getBaseCenter(destinationCoords, userLocation) {
-  if (userLocation?.latitude && userLocation?.longitude) {
-    return { latitude: userLocation.latitude, longitude: userLocation.longitude };
-  }
-
   if (destinationCoords?.latitude && destinationCoords?.longitude) {
     return { latitude: destinationCoords.latitude, longitude: destinationCoords.longitude };
+  }
+
+  if (userLocation?.latitude && userLocation?.longitude) {
+    return { latitude: userLocation.latitude, longitude: userLocation.longitude };
   }
 
   return fallbackCenter;
 }
 
 function buildAttractionPoints(attractions, baseCenter) {
-  return (attractions || []).slice(0, 6).map((name, index) => {
+  return (attractions || []).slice(0, 8).map((name, index) => {
     const hash = hashCode(`${name}-${index}`);
-    const latOffset = (((hash % 17) - 8) * 0.012) + index * 0.004;
-    const lonOffset = ((((hash >> 2) % 17) - 8) * 0.012) - index * 0.003;
+    const latOffset = (((hash % 17) - 8) * 0.01) + index * 0.003;
+    const lonOffset = ((((hash >> 2) % 17) - 8) * 0.01) - index * 0.002;
 
     return {
       name,
@@ -63,7 +63,7 @@ function TravelMapPremium({ destination, destinationCoords, userLocation, attrac
     const entries = [];
     if (userLocation?.latitude && userLocation?.longitude) {
       entries.push({
-        name: "Your location",
+        name: "📍 Your Location",
         type: "user",
         latitude: userLocation.latitude,
         longitude: userLocation.longitude
@@ -71,7 +71,7 @@ function TravelMapPremium({ destination, destinationCoords, userLocation, attrac
     }
 
     entries.push({
-      name: destination || "Destination hub",
+      name: destination || "Destination",
       type: "destination",
       latitude: baseCenter.latitude,
       longitude: baseCenter.longitude
@@ -103,14 +103,21 @@ function TravelMapPremium({ destination, destinationCoords, userLocation, attrac
     };
   }, [points]);
 
+  /* ── Initialize map ── */
   useEffect(() => {
-    if (mapRef.current || !containerRef.current) {
-      return undefined;
+    if (!containerRef.current) return undefined;
+
+    // Destroy existing map if re-initializing
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+      layerGroupRef.current = null;
     }
 
     const map = L.map(containerRef.current, {
       zoomControl: true,
-      attributionControl: true
+      attributionControl: true,
+      scrollWheelZoom: true
     }).setView([baseCenter.latitude, baseCenter.longitude], 10);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -121,26 +128,36 @@ function TravelMapPremium({ destination, destinationCoords, userLocation, attrac
     layerGroupRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
+    // Force a resize after mount to fix blank tile issue
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
+
     return () => {
       map.remove();
       mapRef.current = null;
       layerGroupRef.current = null;
     };
-  }, [baseCenter]);
+  }, [baseCenter.latitude, baseCenter.longitude]);
 
+  /* ── Update markers and polyline ── */
   useEffect(() => {
-    if (!mapRef.current || !layerGroupRef.current) {
-      return;
-    }
+    if (!mapRef.current || !layerGroupRef.current) return;
 
     const map = mapRef.current;
     const layerGroup = layerGroupRef.current;
     layerGroup.clearLayers();
 
-    const markerIcon = type =>
+    const markerColors = {
+      user: "#36e4a8",
+      destination: "#f06caa",
+      attraction: "#56d8f5"
+    };
+
+    const markerIcon = (type) =>
       L.divIcon({
         className: "",
-        html: `<span class="live-map-marker ${type}"></span>`,
+        html: `<span class="live-map-marker ${type}" style="background:${markerColors[type] || "#56d8f5"}"></span>`,
         iconSize: [18, 18],
         iconAnchor: [9, 9]
       });
@@ -153,72 +170,74 @@ function TravelMapPremium({ destination, destinationCoords, userLocation, attrac
 
     if (points.length > 1) {
       L.polyline(points.map(point => [point.latitude, point.longitude]), {
-        color: "#73f0ff",
-        weight: 4,
-        opacity: 0.85
+        color: "#56d8f5",
+        weight: 3,
+        opacity: 0.75,
+        dashArray: "8, 6"
       }).addTo(layerGroup);
     }
 
     const bounds = L.latLngBounds(points.map(point => [point.latitude, point.longitude]));
     if (bounds.isValid()) {
-      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 12 });
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 13 });
     }
   }, [points]);
 
   return (
     <FeatureShell
       feature="Feature 6"
-      title="Map Navigation"
-      subtitle="Interactive route canvas with live stops and travel math"
-      icon="◐"
-      defaultExpanded={false}
+      title="Interactive Map"
+      subtitle="Live route visualization with attraction markers and travel segments"
+      icon="🗺️"
+      defaultExpanded={true}
     >
       <div className="module-panel">
-        <p className="panel-subtle">
-          Interactive routed map with live user positioning, attraction markers, travel segments, and estimated movement time.
-        </p>
-
-        <div className="map-frame live-map-frame">
-          <div ref={containerRef} className="live-map-canvas" />
+        <div className="map-frame live-map-frame" style={{ minHeight: "420px" }}>
+          <div ref={containerRef} className="live-map-canvas" style={{ height: "420px", width: "100%" }} />
         </div>
 
         <div className="map-meta-grid">
           <article className="map-meta-card">
-            <strong>User location</strong>
-            <span>{userLocation ? `${userLocation.latitude.toFixed(3)}, ${userLocation.longitude.toFixed(3)}` : "Waiting for geolocation"}</span>
+            <strong>Destination</strong>
+            <span>{destination || "Not set"} — {baseCenter.latitude.toFixed(3)}, {baseCenter.longitude.toFixed(3)}</span>
           </article>
           <article className="map-meta-card">
-            <strong>Estimated travel time</strong>
-            <span>{routeStats.estimatedTravelTime}</span>
+            <strong>User Location</strong>
+            <span>{userLocation ? `${userLocation.latitude.toFixed(3)}, ${userLocation.longitude.toFixed(3)}` : "Awaiting GPS"}</span>
           </article>
         </div>
 
         <div className="map-meta-grid">
           <article className="map-meta-card">
-            <strong>Route distance</strong>
-            <span>{routeStats.totalDistance}</span>
+            <strong>Route Distance</strong>
+            <span style={{ fontFamily: "JetBrains Mono, monospace" }}>{routeStats.totalDistance}</span>
           </article>
           <article className="map-meta-card">
-            <strong>Displayed stops</strong>
-            <span>{points.length}</span>
+            <strong>Est. Travel Time</strong>
+            <span style={{ fontFamily: "JetBrains Mono, monospace" }}>{routeStats.estimatedTravelTime}</span>
           </article>
         </div>
 
-        <div className="map-marker-list">
-          {points.map(point => (
-            <span key={`${point.type}-${point.name}`}>{point.name}</span>
-          ))}
-        </div>
+        {points.length > 0 && (
+          <div className="map-marker-list">
+            {points.map(point => (
+              <span key={`${point.type}-${point.name}`}>
+                {point.type === "user" ? "📍" : point.type === "destination" ? "🎯" : "⭐"} {point.name}
+              </span>
+            ))}
+          </div>
+        )}
 
-        <div className="route-segment-list">
-          {routeStats.segments.map(segment => (
-            <article key={`${segment.from}-${segment.to}`} className="route-segment-card">
-              <strong>{segment.from} to {segment.to}</strong>
-              <span>{segment.distance}</span>
-              <span>{segment.travelTime}</span>
-            </article>
-          ))}
-        </div>
+        {routeStats.segments.length > 0 && (
+          <div className="route-segment-list">
+            {routeStats.segments.slice(0, 5).map(segment => (
+              <article key={`${segment.from}-${segment.to}`} className="route-segment-card">
+                <strong>{segment.from} → {segment.to}</strong>
+                <span>{segment.distance} · {segment.travelTime}</span>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </FeatureShell>
   );

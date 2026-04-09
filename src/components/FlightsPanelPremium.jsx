@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import FeatureShell from "./FeatureShell.jsx";
 
-function FlightsPanelPremium({ defaultOrigin, defaultDestination }) {
+function FlightsPanelPremium({ defaultOrigin, defaultDestination, defaultExpanded }) {
   const [form, setForm] = useState({
     origin: defaultOrigin,
     destination: defaultDestination,
@@ -12,6 +13,8 @@ function FlightsPanelPremium({ defaultOrigin, defaultDestination }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [sortBy, setSortBy] = useState("price");
+  const [globalBookingUrl, setGlobalBookingUrl] = useState("");
 
   useEffect(() => {
     setForm(current => ({
@@ -36,6 +39,7 @@ function FlightsPanelPremium({ defaultOrigin, defaultDestination }) {
         throw new Error(data.error || "Flight search failed.");
       }
       setResults(data.flights || []);
+      setGlobalBookingUrl(data.bookingUrl || "");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -43,55 +47,121 @@ function FlightsPanelPremium({ defaultOrigin, defaultDestination }) {
     }
   };
 
+  const sorted = [...results].sort((a, b) => {
+    if (sortBy === "price") return a.price - b.price;
+    if (sortBy === "duration") return a.duration.localeCompare(b.duration);
+    if (sortBy === "departure") return a.departureTime.localeCompare(b.departureTime);
+    return 0;
+  });
+
   return (
     <FeatureShell
       feature="Feature 4"
       title="Flights Search"
-      subtitle="Booking-style cards with quick comparison signals"
-      icon="✈"
+      subtitle="Real-time flight comparison with instant booking links"
+      icon="✈️"
       loading={loading}
       error={error}
-      defaultExpanded={false}
-      action={
-        <button className="button button-primary" type="button" onClick={searchFlights} disabled={loading}>
-          {loading ? "Searching..." : "Search Flights"}
-        </button>
-      }
+      defaultExpanded={defaultExpanded !== undefined ? defaultExpanded : false}
     >
       <div className="module-panel">
         <div className="module-form-grid">
           <label>
-            <span>Origin</span>
-            <input value={form.origin} onChange={event => setForm({ ...form, origin: event.target.value })} />
+            <span>From</span>
+            <input value={form.origin} onChange={e => setForm({ ...form, origin: e.target.value })} placeholder="e.g. Chennai" />
           </label>
           <label>
-            <span>Destination</span>
-            <input value={form.destination} onChange={event => setForm({ ...form, destination: event.target.value })} />
+            <span>To</span>
+            <input value={form.destination} onChange={e => setForm({ ...form, destination: e.target.value })} placeholder="e.g. Shillong" />
           </label>
           <label>
             <span>Departure</span>
-            <input type="date" value={form.departure_date} onChange={event => setForm({ ...form, departure_date: event.target.value })} />
+            <input type="date" value={form.departure_date} onChange={e => setForm({ ...form, departure_date: e.target.value })} />
           </label>
           <label>
             <span>Return</span>
-            <input type="date" value={form.return_date} onChange={event => setForm({ ...form, return_date: event.target.value })} />
+            <input type="date" value={form.return_date} onChange={e => setForm({ ...form, return_date: e.target.value })} />
           </label>
           <label>
             <span>Passengers</span>
-            <input type="number" min="1" max="8" value={form.passengers} onChange={event => setForm({ ...form, passengers: Number(event.target.value) || 1 })} />
+            <input type="number" min="1" max="9" value={form.passengers} onChange={e => setForm({ ...form, passengers: Number(e.target.value) || 1 })} />
           </label>
         </div>
 
-        <div className="module-card-grid">
-          {results.map(flight => (
-            <article key={`${flight.airline}-${flight.departure_time}-${flight.price}`} className="module-card premium-module-card">
-              <strong>{flight.airline}</strong>
-              <span>{flight.departure_time}</span>
-              <span>{flight.duration}</span>
-              <span>{flight.price}</span>
-            </article>
-          ))}
-        </div>
+        <button className="button button-primary" type="button" onClick={searchFlights} disabled={loading} style={{ marginTop: "8px" }}>
+          {loading ? "Searching..." : "✈️ Search Flights"}
+        </button>
+
+        {results.length > 0 && (
+          <>
+            <div className="sort-controls">
+              <span style={{ color: "var(--muted)", fontSize: "0.78rem", marginRight: "8px", alignSelf: "center" }}>Sort by:</span>
+              {[["price", "Price"], ["duration", "Duration"], ["departure", "Departure"]].map(([key, label]) => (
+                <button
+                  key={key}
+                  type="button"
+                  className={`sort-btn ${sortBy === key ? "active" : ""}`}
+                  onClick={() => setSortBy(key)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div className="module-card-grid">
+              {sorted.map((flight, i) => (
+                <motion.article
+                  key={`${flight.flightNo}-${i}`}
+                  className="module-card premium-module-card"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.06 }}
+                  whileHover={{ y: -4 }}
+                >
+                  <div className="flight-card-header">
+                    <div>
+                      <div className="flight-airline">{flight.airline}</div>
+                      <span style={{ color: "var(--muted)", fontSize: "0.75rem" }}>{flight.flightNo}</span>
+                    </div>
+                    <div className="flight-price">{flight.priceFormatted}</div>
+                  </div>
+
+                  <div className="flight-route">
+                    <div>
+                      <div className="flight-time">{flight.departureTime}</div>
+                      <span className="flight-city">{form.origin}</span>
+                    </div>
+                    <div className="flight-connector">
+                      <span className="flight-line" />
+                      <span className="flight-duration-badge">{flight.duration}</span>
+                      <span className="flight-line" />
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div className="flight-time">{flight.arrivalTime}</div>
+                      <span className="flight-city">{form.destination}</span>
+                    </div>
+                  </div>
+
+                  <div className="flight-meta">
+                    <span className="flight-tag">{flight.stops}</span>
+                    <span className="flight-tag">{flight.class}</span>
+                    {flight.refundable && <span className="flight-tag" style={{ color: "var(--green)" }}>Refundable</span>}
+                    {form.passengers > 1 && <span className="flight-tag">{flight.perPerson}/person</span>}
+                  </div>
+
+                  <a
+                    href={flight.bookingUrl || globalBookingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="booking-btn"
+                  >
+                    Book on Google Flights →
+                  </a>
+                </motion.article>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </FeatureShell>
   );
