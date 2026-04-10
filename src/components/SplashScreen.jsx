@@ -47,7 +47,7 @@ function SplashScreen({ visible }) {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
             >
-              AI
+              SR
             </motion.div>
 
             <motion.p
@@ -56,7 +56,7 @@ function SplashScreen({ visible }) {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              Smart Route SRMist
+              Smart Route
             </motion.p>
 
             <motion.p
@@ -65,7 +65,7 @@ function SplashScreen({ visible }) {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.5 }}
             >
-              Initializing Agentic AI Systems...
+              Initializing AI agents...
             </motion.p>
 
             <motion.div

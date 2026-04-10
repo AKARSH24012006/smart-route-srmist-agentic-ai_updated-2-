@@ -6,7 +6,7 @@ const pipelineNodes = [
     name: "Request Capture",
     icon: "📡",
     iconClass: "capture",
-    desc: "FastAPI server validates input via Pydantic schemas and streams via WebSocket.",
+    desc: "Validates user input and prepares the request payload.",
     detail: null
   },
   {
@@ -14,15 +14,15 @@ const pipelineNodes = [
     name: "Multi-Agent Analysis",
     icon: "🧠",
     iconClass: "analysis",
-    desc: "Preference (Bayesian), Budget (LP), Weather (Naive Bayes), Crowd (GPR) agents collaborate.",
+    desc: "Preference, budget, weather, and crowd agents collaborate on analysis.",
     detail: null
   },
   {
     id: "planning",
-    name: "Planning Layer",
+    name: "Route Planning",
     icon: "🎯",
     iconClass: "planning",
-    desc: "Monte Carlo Tree Search with UCB1 selection across 47 iterations for optimal route.",
+    desc: "Optimizes route selection using tree search across multiple iterations.",
     detail: null
   },
   {
@@ -30,7 +30,7 @@ const pipelineNodes = [
     name: "Decision Policy",
     icon: "⚖️",
     iconClass: "decision",
-    desc: "Q-Learning RL improves policy with adaptive optimization and confidence scoring.",
+    desc: "Reinforcement learning refines policy with confidence scoring.",
     detail: null
   },
   {
@@ -38,7 +38,7 @@ const pipelineNodes = [
     name: "LLM Refinement",
     icon: "✨",
     iconClass: "llm",
-    desc: "RAG + OpenTripMap data + Gemini 1.5 Flash refines the context package.",
+    desc: "Enriches the plan with real-time data and AI-generated context.",
     detail: null
   },
   {
@@ -46,7 +46,7 @@ const pipelineNodes = [
     name: "Explainability",
     icon: "🔍",
     iconClass: "explain",
-    desc: "Decision reasoning, factor attribution, and confidence score generation.",
+    desc: "Generates decision reasoning and factor attribution.",
     detail: null
   },
   {
@@ -54,7 +54,7 @@ const pipelineNodes = [
     name: "Booking Layer",
     icon: "🎫",
     iconClass: "booking",
-    desc: "Hotel, Cab, Activities (OpenTripMap), and Flight agents prepare real-time options.",
+    desc: "Prepares real-time flight, hotel, and activity options.",
     detail: null
   }
 ];
@@ -94,10 +94,9 @@ function PipelineVisualization({ pipelineData, loading }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="section-label">⚙️ Architecture</div>
-      <h2 className="section-title">Multi-Agent Pipeline</h2>
+      <h2 className="section-title">AI Pipeline</h2>
       <p className="section-subtitle">
-        Real-time visualization of the agentic AI pipeline — from request capture through
-        multi-agent analysis, MCTS planning, RL-based decision policy, to booking and explainability.
+        Real-time visualization of the multi-agent pipeline — from request capture through analysis, planning, and booking.
       </p>
 
       <motion.div
@@ -169,7 +168,7 @@ function PipelineVisualization({ pipelineData, loading }) {
           transition={{ delay: 0.7 }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-            <h3 style={{ fontSize: "1rem" }}>Decision Policy Output</h3>
+            <h3 style={{ fontSize: "1rem" }}>Decision Output</h3>
             <span style={{ fontSize: "1.6rem", fontWeight: 800, fontFamily: "JetBrains Mono, monospace", color: "var(--green)" }}>
               {(pipelineData.decision.confidenceScore * 100).toFixed(1)}%
             </span>

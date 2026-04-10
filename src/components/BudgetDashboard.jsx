@@ -51,7 +51,7 @@ function BudgetDashboard({
     <FeatureShell
       feature="Feature 3"
       title="Smart Budget Manager"
-      subtitle="Independent category tracking with live progress"
+      subtitle="Category tracking with live progress"
       icon="◈"
       loading={loading}
       error={error}
@@ -68,7 +68,7 @@ function BudgetDashboard({
     >
       <div className="budget-dashboard">
         <p className="panel-subtle">
-          Define a total trip budget, split it into categories, and track expenses independently for each one.
+          Set a total budget, split by category, and track spending in real time.
         </p>
 
         <label className="budget-total-input">
@@ -94,7 +94,7 @@ function BudgetDashboard({
         {!budgetStatus ? (
           <div className="empty-feature-state">
             <strong>No budget plan created yet</strong>
-            <span>Create a budget plan to track category-by-category spending progress.</span>
+            <span>Create a budget to start tracking spending by category.</span>
           </div>
         ) : (
           <div className="budget-status-grid">

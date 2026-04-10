@@ -13,7 +13,7 @@ function QuickTripPanel({
     <FeatureShell
       feature="Feature 2"
       title="Quick Trip Near Me"
-      subtitle="Fast discovery using browser geolocation"
+      subtitle="Discover nearby spots using your location"
       icon="◎"
       loading={loading}
       error={error}
@@ -25,7 +25,7 @@ function QuickTripPanel({
     >
       <div className="quick-trip-panel">
         <p className="panel-subtle">
-          Use your current location to find nearby places worth visiting when you only have a few hours available.
+          Find nearby places worth visiting when you have a few hours free.
         </p>
 
         <label className="quick-trip-hours">
@@ -47,7 +47,7 @@ function QuickTripPanel({
         {!results.length ? (
           <div className="empty-feature-state">
             <strong>No quick trip suggestions yet</strong>
-            <span>Tap the button to use your browser geolocation and fetch nearby travel ideas.</span>
+            <span>Use your browser location to find nearby travel ideas.</span>
           </div>
         ) : (
           <div className="quick-trip-results">

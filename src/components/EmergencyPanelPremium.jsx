@@ -32,7 +32,7 @@ function EmergencyPanelPremium({ origin, destination }) {
     <FeatureShell
       feature="Feature 8"
       title="Emergency Travel Help"
-      subtitle="Fallback guidance when the trip starts slipping"
+      subtitle="Fallback options when plans change"
       icon="⚠"
       loading={loading}
       error={error}
@@ -45,7 +45,7 @@ function EmergencyPanelPremium({ origin, destination }) {
     >
       <div className="module-panel">
         <p className="panel-subtle">
-          Find mock fallback hotels, alternate flights, and nearby transport options when plans break down.
+          Find nearby hotels, alternate flights, and transport options.
         </p>
 
         {data ? (

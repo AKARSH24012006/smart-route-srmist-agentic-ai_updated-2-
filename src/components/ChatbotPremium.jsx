@@ -25,12 +25,12 @@ function ChatbotPremium({ context }) {
     {
       id: "assistant-welcome",
       role: "assistant",
-      content: "I'm your AI travel assistant. Ask for itineraries, nearby quick trips, or cheaper hotel ideas.",
+      content: "I can help with itineraries, nearby trips, and hotel recommendations.",
       cards: [
         {
           type: "capabilities",
           title: "I can help with",
-          items: ["Trip planning", "Quick nearby suggestions", "Budget-aware hotel guidance"]
+          items: ["Trip planning", "Nearby places", "Hotel search"]
         }
       ],
       quickActions: starterPrompts,
@@ -133,7 +133,7 @@ function ChatbotPremium({ context }) {
             <div className="chatbot-header">
               <div>
                 <p className="eyebrow">AI Assistant</p>
-                <h3>Travel Agent Console</h3>
+                <h3>Travel Assistant</h3>
               </div>
               <button type="button" className="chatbot-close" onClick={() => setIsOpen(false)} aria-label="Close assistant">
                 ×
@@ -198,7 +198,7 @@ function ChatbotPremium({ context }) {
                 <article className="chat-message assistant">
                   <div className="chat-message-bubble typing">
                     <small>AI Travel Agent</small>
-                    <p>Thinking through your trip...</p>
+                    <p>Thinking...</p>
                   </div>
                 </article>
               ) : null}
@@ -209,7 +209,7 @@ function ChatbotPremium({ context }) {
             <form className="chatbot-form" onSubmit={handleSubmit}>
               <textarea
                 rows="2"
-                placeholder="Ask for itineraries, hotels, nearby places, or budget help..."
+                placeholder="Ask about trips, hotels, or nearby places..."
                 value={draft}
                 onChange={event => setDraft(event.target.value)}
                 onKeyDown={event => {

@@ -35,7 +35,7 @@ function CrowdInsightsPanelPremium({ destination, attractions }) {
     <FeatureShell
       feature="Feature 9"
       title="Crowd & Best Time Prediction"
-      subtitle="Peak-hour signals for smarter scheduling"
+      subtitle="Optimal visit times for your attractions"
       icon="◍"
       loading={loading}
       error={error}

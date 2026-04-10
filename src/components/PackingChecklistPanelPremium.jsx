@@ -41,7 +41,7 @@ function PackingChecklistPanelPremium({ defaultDestination }) {
     <FeatureShell
       feature="Feature 7"
       title="Packing Checklist"
-      subtitle="Smart readiness guidance based on trip context"
+      subtitle="Smart packing based on trip context"
       icon="◌"
       loading={loading}
       error={error}

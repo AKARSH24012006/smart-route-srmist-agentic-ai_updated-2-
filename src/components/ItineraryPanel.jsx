@@ -5,7 +5,7 @@ function ItineraryPanel({ itinerary, loading, error, onGenerate }) {
     <FeatureShell
       feature="Feature 1"
       title="AI Itinerary Generator"
-      subtitle="Structured day-by-day mission planning"
+      subtitle="Structured day-by-day planning"
       icon="✦"
       loading={loading}
       error={error}
@@ -17,13 +17,13 @@ function ItineraryPanel({ itinerary, loading, error, onGenerate }) {
     >
       <div className="itinerary-panel">
         <p className="panel-subtle">
-          Create a structured day-by-day travel plan using destination, duration, budget, and interests from the current planner.
+          Generate a day-by-day travel plan using your current planner inputs.
         </p>
 
         {!itinerary ? (
           <div className="empty-feature-state">
             <strong>No itinerary yet</strong>
-            <span>Generate an itinerary to see attractions, meals, shopping blocks, and activities organized by day.</span>
+            <span>Click generate to see daily attractions, meals, and activities.</span>
           </div>
         ) : (
           <div className="generated-itinerary">

@@ -68,7 +68,7 @@ function ActivitiesPanel({ destination, defaultExpanded = false }) {
     <FeatureShell
       feature="Feature 7"
       title="Activities & Attractions"
-      subtitle="Real-time discovery via OpenTripMap — culture, nature, food, and more"
+      subtitle="Discover culture, nature, food, and more nearby"
       icon="🗺️"
       loading={loading}
       error={error}
@@ -125,7 +125,7 @@ function ActivitiesPanel({ destination, defaultExpanded = false }) {
         {!loading && results.length === 0 && (
           <div className="empty-feature-state">
             <strong>No activities loaded yet</strong>
-            <span>Click the button above to discover real attractions and activities near {destination || "your destination"}.</span>
+            <span>Click discover to find real attractions near {destination || "your destination"}.</span>
           </div>
         )}
       </div>

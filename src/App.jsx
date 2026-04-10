@@ -19,13 +19,13 @@ import ActivitiesPanel from "./components/ActivitiesPanel.jsx";
 const TravelMapPremium = lazy(() => import("./components/TravelMapPremium.jsx"));
 
 const agentDeck = [
-  { name: "Planner Agent", role: "Mission architecture & MCTS", icon: "🛸" },
-  { name: "Weather Risk Agent", role: "Naive Bayes forecast resilience", icon: "🌦️" },
-  { name: "Crowd Analyzer", role: "GPR density intelligence", icon: "👥" },
-  { name: "Budget Optimizer", role: "LP-based spend discipline", icon: "💰" },
-  { name: "Preference Agent", role: "Bayesian taste learning", icon: "❤️" },
-  { name: "Booking Assistant", role: "Real-time logistics", icon: "🎫" },
-  { name: "Explainability Agent", role: "Reasoning trace & attribution", icon: "🧩" }
+  { name: "Planner", role: "Route optimization", icon: "🛸" },
+  { name: "Weather", role: "Forecast analysis", icon: "🌦️" },
+  { name: "Crowd", role: "Density prediction", icon: "👥" },
+  { name: "Budget", role: "Spend optimization", icon: "💰" },
+  { name: "Preference", role: "Taste learning", icon: "❤️" },
+  { name: "Booking", role: "Real-time search", icon: "🎫" },
+  { name: "Explain", role: "Decision reasoning", icon: "🧩" }
 ];
 
 const starterActivities = [
@@ -43,10 +43,10 @@ const defaultForm = {
 };
 
 const personas = [
-  { id: "explorer", icon: "🧭", title: "Explorer", body: "Hidden gems & route novelty" },
-  { id: "student", icon: "🎓", title: "Student", body: "Lean budgets & fast movement" },
-  { id: "family", icon: "🏡", title: "Family", body: "Comfort, safety & buffers" },
-  { id: "creator", icon: "📸", title: "Creator", body: "Golden-hour visuals & aesthetic" }
+  { id: "explorer", icon: "🧭", title: "Explorer", body: "Hidden gems" },
+  { id: "student", icon: "🎓", title: "Student", body: "Budget travel" },
+  { id: "family", icon: "🏡", title: "Family", body: "Comfort first" },
+  { id: "creator", icon: "📸", title: "Creator", body: "Visual stories" }
 ];
 
 const serviceOptions = ["Hotels", "Food", "Cab rental", "Attractions", "Language tips", "Local events", "Rain backup"];
@@ -484,10 +484,10 @@ function App() {
           transition={{ duration: 0.45, delay: splashVisible ? 2.4 : 0, ease: "easeOut" }}
         >
           <div className="brand">
-            <div className="brand-mark glow-mark">AI</div>
+            <div className="brand-mark glow-mark">SR</div>
             <div>
-              <p className="eyebrow">Smart Route SRMist</p>
-              <h1>Agentic AI Travel Studio</h1>
+              <p className="eyebrow">SRMist</p>
+              <h1>Smart Route</h1>
             </div>
           </div>
 
@@ -505,9 +505,9 @@ function App() {
           </nav>
 
           <div className="topbar-actions">
-            <button className="button button-primary" onClick={emergencyReplan}>🚨 Emergency</button>
-            <button className="button button-ghost" onClick={syncGps}>📍 GPS</button>
-            <button className="button button-ghost" onClick={chooseDestination}>🧭 Explore</button>
+            <button className="button button-primary" onClick={emergencyReplan}>Emergency</button>
+            <button className="button button-ghost" onClick={syncGps}>GPS</button>
+            <button className="button button-ghost" onClick={chooseDestination}>Explore</button>
           </div>
         </motion.header>
 
@@ -519,36 +519,35 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: splashVisible ? 2.6 : 0.05, ease: "easeOut" }}
         >
-          <div className="hero-floating-card">⚡ AI-powered route intelligence</div>
+          <div className="hero-floating-card">AI-Powered</div>
           <div className="hero-copy">
-            <span className="eyebrow live">Multi-agent pipeline orchestration</span>
-            <h2 className="animated-headline">Travel planning that feels like a command center.</h2>
+            <span className="eyebrow live">Multi-agent pipeline</span>
+            <h2 className="animated-headline">Plan smarter, travel better.</h2>
             <p>
-              Full-stack agentic AI with Monte Carlo Tree Search, Bayesian preference learning,
-              real-time flight & hotel booking, and transparent decision reasoning.
+              7 AI agents optimize routes, flights, hotels, and budget in real time.
             </p>
 
             <div className="hero-stats">
               <article>
                 <strong><AnimatedCounter value={7} /></strong>
-                <span>specialist agents</span>
+                <span>Agents</span>
               </article>
               <article>
                 <strong>{status.healthy ? "LIVE" : "OFF"}</strong>
-                <span>backend status</span>
+                <span>Status</span>
               </article>
               <article>
                 <strong>{plan?.pipeline?.decision?.confidenceScore ? `${(plan.pipeline.decision.confidenceScore * 100).toFixed(0)}%` : "—"}</strong>
-                <span>pipeline confidence</span>
+                <span>Confidence</span>
               </article>
             </div>
 
             <div className="hero-cta-row">
               <button className="button button-primary big" onClick={runTripGeneration} disabled={loading}>
-                {loading ? "Pipeline running..." : "🚀 Launch Full Travel Mission"}
+                {loading ? "Generating..." : "Generate Trip"}
               </button>
               <button className="button button-ghost" onClick={halfDayPlan}>
-                ⚡ Half-Day Plan
+                Quick Plan
               </button>
             </div>
           </div>
@@ -557,7 +556,7 @@ function App() {
             <div className="status-card">
               <p className="tiny-label">Provider</p>
               <strong>{status.provider}</strong>
-              <span>{status.healthy ? "Backend online and ready." : "Backend not responding."}</span>
+              <span>{status.healthy ? "Online" : "Offline"}</span>
             </div>
             <div className="status-grid">
               <div className="mini-status">
@@ -571,11 +570,11 @@ function App() {
             </div>
             <div className="hero-mini-grid">
               <article className="hero-mini-card">
-                <span>Geo routing</span>
+                <span>GPS</span>
                 <strong>{quickTripCoords ? "Live" : "Standby"}</strong>
               </article>
               <article className="hero-mini-card">
-                <span>Budget model</span>
+                <span>Budget</span>
                 <strong>{budgetStatus ? "Tracked" : "Ready"}</strong>
               </article>
             </div>
@@ -593,12 +592,12 @@ function App() {
           >
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Trip console</p>
-                <h3>Design a mission-ready route</h3>
+                <p className="eyebrow">Planner</p>
+                <h3>Plan your trip</h3>
               </div>
               <div className="planner-chip-stack">
-                <span className="planner-badge">Live orchestration</span>
-                <span className="planner-badge alt">Adaptive planning</span>
+                <span className="planner-badge">Live</span>
+                <span className="planner-badge alt">Adaptive</span>
               </div>
             </div>
 
@@ -657,12 +656,12 @@ function App() {
 
             <div className="action-row">
               <button className="button button-primary big" onClick={runTripGeneration} disabled={loading}>
-                {loading ? "Pipeline running..." : "🔮 Generate Agentic Trip"}
+                {loading ? "Generating..." : "Generate Trip"}
               </button>
               <button className="button button-ghost" onClick={runItineraryGeneration}>
-                📋 Structured Itinerary
+                Itinerary
               </button>
-              <button className="button button-ghost" onClick={halfDayPlan}>⚡ Half-Day</button>
+              <button className="button button-ghost" onClick={halfDayPlan}>Quick Plan</button>
             </div>
 
             {plan && (
@@ -757,9 +756,9 @@ function App() {
               <div className="section-heading compact">
                 <div>
                   <p className="eyebrow">Agents</p>
-                  <h3>Collaboration matrix</h3>
+                  <h3>Active agents</h3>
                 </div>
-                <span className="planner-badge">Live nodes</span>
+                <span className="planner-badge">Live</span>
               </div>
               <div className="agent-list">
                 {agentDeck.map(agent => (
@@ -783,7 +782,7 @@ function App() {
               <div className="section-heading compact">
                 <div>
                   <p className="eyebrow">Budget</p>
-                  <h3>Optimization ledger</h3>
+                  <h3>Spending overview</h3>
                 </div>
               </div>
               <div className="budget-value">{formatMoney(plan?.budget?.estimated || 0)}</div>
@@ -803,7 +802,7 @@ function App() {
               <div className="section-heading compact">
                 <div>
                   <p className="eyebrow">Activity</p>
-                  <h3>Live mission feed</h3>
+                  <h3>Agent feed</h3>
                 </div>
               </div>
               <div className="activity-feed">
@@ -830,7 +829,7 @@ function App() {
               <div className="section-heading compact">
                 <div>
                   <p className="eyebrow">Weather</p>
-                  <h3>Live forecast</h3>
+                  <h3>Forecast</h3>
                 </div>
               </div>
               <div className="weather-grid">
@@ -862,8 +861,8 @@ function App() {
                 <motion.section className="glass-panel panel" variants={fadeUp}>
                   <div className="section-heading compact">
                     <div>
-                      <p className="eyebrow">Innovation layer</p>
-                      <h3>Experience upgrades</h3>
+                      <p className="eyebrow">Insights</p>
+                      <h3>Recommendations</h3>
                     </div>
                   </div>
                   <div className="bullet-list">
@@ -874,7 +873,7 @@ function App() {
                 <motion.section className="glass-panel panel" variants={fadeUp}>
                   <div className="section-heading compact">
                     <div>
-                      <p className="eyebrow">Local kit</p>
+                      <p className="eyebrow">Local</p>
                       <h3>Phrases & packing</h3>
                     </div>
                   </div>
@@ -895,7 +894,7 @@ function App() {
                   <div className="section-heading compact">
                     <div>
                       <p className="eyebrow">Reasoning</p>
-                      <h3>Transparent AI trail</h3>
+                      <h3>Decision trail</h3>
                     </div>
                   </div>
                   <div className="bullet-list">
@@ -977,50 +976,49 @@ function App() {
           <div className="footer-grid">
             <div>
               <div className="footer-brand">
-                <div className="footer-brand-mark">AI</div>
-                <span className="footer-brand-text">Smart Route SRMist</span>
+                <div className="footer-brand-mark">SR</div>
+                <span className="footer-brand-text">Smart Route</span>
               </div>
               <p className="footer-desc">
-                Full-stack agentic AI travel planner with multi-agent pipeline, real-time booking,
-                interactive maps, and transparent decision reasoning.
+                Multi-agent AI travel planner with real-time booking.
               </p>
             </div>
 
             <div className="footer-col">
               <h4>Platform</h4>
               <ul>
-                <li>AI Trip Planning</li>
-                <li>Real-time Flight Search</li>
+                <li>Trip Planning</li>
+                <li>Flight Search</li>
                 <li>Hotel Booking</li>
-                <li>Activity Discovery</li>
+                <li>Activities</li>
               </ul>
             </div>
 
             <div className="footer-col">
-              <h4>Pipeline</h4>
+              <h4>AI Pipeline</h4>
               <ul>
-                <li>Bayesian Preference Agent</li>
-                <li>LP Budget Optimizer</li>
-                <li>MCTS Planning Layer</li>
-                <li>Q-Learning Decision Policy</li>
+                <li>Preference Agent</li>
+                <li>Budget Optimizer</li>
+                <li>Route Planner</li>
+                <li>Decision Engine</li>
               </ul>
             </div>
 
             <div className="footer-col">
-              <h4>Modules</h4>
+              <h4>Features</h4>
               <ul>
-                <li>Flights + Booking</li>
-                <li>Hotels + Booking</li>
-                <li>OpenTripMap Activities</li>
-                <li>Emergency & Packing</li>
+                <li>Flights</li>
+                <li>Hotels</li>
+                <li>Activities</li>
+                <li>Emergency</li>
               </ul>
             </div>
           </div>
 
           <div className="footer-bottom">
-            <p>© {new Date().getFullYear()} Smart Route SRMist · Agentic AI Travel Studio</p>
+            <p>© {new Date().getFullYear()} Smart Route SRMist</p>
             <div className="footer-badge">
-              <span>Built with</span> Agentic AI · React · Node.js · OpenTripMap
+              <span>Built with</span> React · Node.js · AI
             </div>
           </div>
         </motion.footer>

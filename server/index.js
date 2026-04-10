@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import {
   geocodePlace,
   fetchWeather,
@@ -14,6 +16,9 @@ import {
 import { buildMockPlan } from "./lib/planner.js";
 import { maybeGenerateWithAI } from "./lib/ai.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const port = Number(process.env.PORT || 8787);
 const budgetCategories = ["Food", "Shopping", "Transport", "Hotels", "Activities"];
@@ -21,6 +26,32 @@ let budgetStore = null;
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
+
+/* ═══════ STATIC FILES ═══════ */
+const staticDir = path.resolve(__dirname, "..", "static");
+
+// Disable caching for all static assets
+const staticOptions = {
+  setHeaders: (res) => {
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+  }
+};
+
+app.use("/static", express.static(staticDir, staticOptions));
+
+// Also serve at root path
+app.use("/", express.static(staticDir, staticOptions));
+
+// SPA fallback: serve index.html for any /static/* route that isn't a file
+app.get("/static/*", (req, res, next) => {
+  const indexPath = path.join(staticDir, "index.html");
+  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.sendFile(indexPath, (err) => {
+    if (err) next();
+  });
+});
 
 /* ═══════ HEALTH ═══════ */
 app.get("/api/health", async (_req, res) => {

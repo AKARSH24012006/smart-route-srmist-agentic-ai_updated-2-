@@ -63,7 +63,7 @@ function HotelsPanelPremium({ defaultCity, defaultBudget, defaultExpanded }) {
     <FeatureShell
       feature="Feature 5"
       title="Hotels Search"
-      subtitle="Compare stays with real pricing, amenities, and instant booking"
+      subtitle="Compare stays with pricing and instant booking"
       icon="🏨"
       loading={loading}
       error={error}
@@ -90,7 +90,7 @@ function HotelsPanelPremium({ defaultCity, defaultBudget, defaultExpanded }) {
         </div>
 
         <button className="button button-primary" type="button" onClick={searchHotels} disabled={loading} style={{ marginTop: "8px" }}>
-          {loading ? "Searching..." : "🏨 Search Hotels"}
+          {loading ? "Searching..." : "Search Hotels"}
         </button>
 
         {results.length > 0 && (

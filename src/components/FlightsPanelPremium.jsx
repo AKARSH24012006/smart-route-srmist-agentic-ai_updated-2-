@@ -58,7 +58,7 @@ function FlightsPanelPremium({ defaultOrigin, defaultDestination, defaultExpande
     <FeatureShell
       feature="Feature 4"
       title="Flights Search"
-      subtitle="Real-time flight comparison with instant booking links"
+      subtitle="Real-time comparison with booking links"
       icon="✈️"
       loading={loading}
       error={error}
@@ -89,7 +89,7 @@ function FlightsPanelPremium({ defaultOrigin, defaultDestination, defaultExpande
         </div>
 
         <button className="button button-primary" type="button" onClick={searchFlights} disabled={loading} style={{ marginTop: "8px" }}>
-          {loading ? "Searching..." : "✈️ Search Flights"}
+          {loading ? "Searching..." : "Search Flights"}
         </button>
 
         {results.length > 0 && (
