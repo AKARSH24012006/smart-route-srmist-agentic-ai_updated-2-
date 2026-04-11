@@ -40,7 +40,7 @@ function FeatureShell({
         </div>
         <div className="feature-shell-side">
           {loading ? <span className="feature-shell-loading">Running</span> : null}
-          <span className={`feature-shell-toggle ${isExpanded ? "open" : ""}`}>⌄</span>
+          <span className={`feature-shell-toggle ${isExpanded ? "open" : ""}`}>+</span>
         </div>
       </motion.button>
 
